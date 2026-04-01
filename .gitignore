@@ -1,0 +1,11 @@
+.next
+node_modules
+.env.local
+.env*.local
+ADMIN_ACCESS_TOKEN.txt
+npm-debug.log*
+tsconfig.tsbuildinfo
+.DS_Store
+CONTEXT.md
+mobile_car_wash_startup_plan.pdf
+Capture d’écran*
