@@ -19,7 +19,7 @@ export function Footer() {
             <p className="text-lg font-semibold text-primary">{contactDetails.brandName}</p>
           </div>
           <p className="max-w-md text-sm leading-6 text-slate-600">
-            Lavage de voiture à domicile pour les particuliers et professionnels à Sfax
+            Lavage de voiture à domicile pour les particuliers et professionnels à Sousse
             et ses alentours.
           </p>
         </div>

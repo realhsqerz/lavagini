@@ -20,7 +20,7 @@ export function Navbar() {
           />
           <div>
             <p className="text-sm font-semibold text-primary">Lavagini</p>
-            <p className="text-xs text-slate-500">Service mobile à Sfax</p>
+            <p className="text-xs text-slate-500">Service mobile à Sousse</p>
           </div>
         </Link>
 

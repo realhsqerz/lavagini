@@ -34,7 +34,7 @@ Les valeurs actuelles sont des placeholders. Il faut me donner:
 ### 4. Regles metier a confirmer
 
 - Horaires de service reels
-- Zones desservies exactes autour de Sfax
+- Zones desservies exactes autour de Sousse
 - Tarifs finaux par forfait
 - Types de voiture acceptes
 - Delai moyen de confirmation apres reservation

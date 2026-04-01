@@ -11,7 +11,7 @@ export function HomeHero() {
     <section className="overflow-hidden">
       <div className="container-shell section-space grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div className="space-y-8">
-          <Badge>Service mobile à Sfax</Badge>
+          <Badge>Service mobile à Sousse</Badge>
           <div className="space-y-5">
             <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-primary sm:text-5xl">
               Lavage de voiture à domicile
@@ -73,7 +73,7 @@ export function HomeHero() {
                   <p className="mt-2 text-sm text-slate-200">Créneaux à confirmer</p>
                 </div>
                 <div className="rounded-3xl bg-white/8 p-5">
-                  <p className="text-3xl font-semibold">Sfax</p>
+                  <p className="text-3xl font-semibold">Sousse</p>
                   <p className="mt-2 text-sm text-slate-200">Et ses alentours</p>
                 </div>
               </div>

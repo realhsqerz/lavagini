@@ -15,7 +15,7 @@ export const contactDetails = {
   whatsappHref: "https://wa.me/21699486202",
   email: "",
   emailLabel: "Email bientôt disponible",
-  serviceArea: "Sfax et ses alentours",
+  serviceArea: "Sousse et ses alentours",
 };
 
 export const steps = [

@@ -10,7 +10,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Lavagini | Lavage de voiture à domicile",
   description:
-    "Réservez un lavage de voiture mobile à domicile ou au bureau à Sfax et ses alentours.",
+    "Réservez un lavage de voiture mobile à domicile ou au bureau à Sousse et ses alentours.",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
