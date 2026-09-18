@@ -122,10 +122,48 @@ export const packages = [
   },
 ];
 
-export const carTypes = [
-  "Citadine",
-  "Berline",
-  "SUV / 4x4",
-  "Utilitaire",
-  "Autre",
+export const carModels = [
+  {
+    id: "sedan",
+    label: "Berline",
+    model: "Volkswagen Passat",
+    file: "/models/2025_volkswagen_passat_pro_380tsi_2.0t.glb",
+  },
+  {
+    id: "suv",
+    label: "SUV",
+    model: "Range Rover Sport 2018",
+    file: "/models/range_rover_sport_2018.glb",
+  },
+  {
+    id: "pickup",
+    label: "Pickup",
+    model: "Jeep Gladiator 2020",
+    file: "/models/2020_jeep_gladiator.glb",
+  },
 ];
+
+export const timeSlots = [
+  {
+    id: "matin",
+    label: "Matin",
+    time: "10h00",
+    description: "Réservation à 10h00",
+  },
+  {
+    id: "apres-midi",
+    label: "Après-midi",
+    time: "14h00",
+    description: "Réservation à 14h00",
+  },
+];
+
+export function formatCarType(carModelId: string) {
+  const model = carModels.find((item) => item.id === carModelId);
+  return model ? `${model.label} — ${model.model}` : carModelId;
+}
+
+export function formatTimeSlot(slotId: string) {
+  const slot = timeSlots.find((item) => item.id === slotId);
+  return slot ? `${slot.label} (${slot.time})` : slotId;
+}

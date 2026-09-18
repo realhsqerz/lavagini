@@ -32,3 +32,38 @@ body {
 .surface {
   @apply rounded-3xl border border-slate-200 bg-white/90 shadow-soft backdrop-blur;
 }
+
+.model-preview-host {
+  @apply relative aspect-[4/3] w-full overflow-hidden rounded-2xl;
+}
+
+.model-preview {
+  @apply block h-full w-full;
+}
+
+model-viewer {
+  --poster-color: transparent;
+  --progress-mask: #f1f5f9;
+  width: 100%;
+  height: 100%;
+}
+
+.map-picker {
+  position: relative;
+  z-index: 0;
+}
+
+.leaflet-container {
+  z-index: 0;
+  font-family: inherit;
+}
+
+.map-pin {
+  background: transparent;
+  border: none;
+}
+
+.map-pin svg {
+  display: block;
+  filter: drop-shadow(0 3px 4px rgba(2, 6, 23, 0.4));
+}
