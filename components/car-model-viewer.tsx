@@ -21,9 +21,12 @@ export function CarModelViewer({ src, alt }: { src: string; alt: string }) {
     const viewer = document.createElement("model-viewer");
     viewer.setAttribute("src", src);
     viewer.setAttribute("alt", alt);
-    viewer.setAttribute("camera-controls", "");
+    viewer.setAttribute("camera-orbit", "0deg 80deg auto");
     viewer.setAttribute("auto-rotate", "");
     viewer.setAttribute("rotation-per-second", "24deg");
+    viewer.setAttribute("interaction-prompt", "none");
+    viewer.setAttribute("disable-tap", "");
+    viewer.style.cursor = "default";
     viewer.setAttribute("shadow-intensity", "1");
     viewer.setAttribute("shadow-softness", "0.8");
     viewer.classList.add("model-preview");
