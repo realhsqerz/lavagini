@@ -25,3 +25,12 @@ export const adminBookingUpdateSchema = bookingSchema.extend({
 });
 
 export type AdminBookingUpdateValues = z.infer<typeof adminBookingUpdateSchema>;
+
+export type ClientRecord = {
+  id: string;
+  name: string;
+  phone: string;
+  bookingsCount: number;
+  firstConfirmedAt: string;
+  lastConfirmedAt: string;
+};

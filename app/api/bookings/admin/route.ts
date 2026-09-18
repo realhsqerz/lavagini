@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { getAdminDb } from "@/lib/firebase-admin";
+import { normalizePhone } from "@/lib/phone";
 import { adminBookingUpdateSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
@@ -30,6 +31,87 @@ function bookingFromDoc(doc: FirebaseFirestore.QueryDocumentSnapshot) {
     status: data.status ?? "pending",
     createdAt,
   };
+}
+
+function clientFromDoc(doc: FirebaseFirestore.QueryDocumentSnapshot) {
+  const data = doc.data();
+  const toIso = (value: unknown) => {
+    const timestamp = value as { toDate?: () => Date };
+    return typeof timestamp?.toDate === "function"
+      ? timestamp.toDate().toISOString()
+      : new Date().toISOString();
+  };
+
+  return {
+    id: doc.id,
+    name: data.name ?? "",
+    phone: data.phone ?? "",
+    bookingsCount: typeof data.bookingsCount === "number" ? data.bookingsCount : 0,
+    firstConfirmedAt: toIso(data.firstConfirmedAt ?? new Date()),
+    lastConfirmedAt: toIso(data.lastConfirmedAt ?? new Date()),
+  };
+}
+
+async function confirmedBookingsForPhone(phone: string) {
+  const db = getAdminDb();
+  const normalized = normalizePhone(phone);
+  const exact = await db.collection("bookings").where("phone", "==", phone).get();
+  const keyed = await db.collection("bookings").where("phoneKey", "==", normalized).get();
+
+  const seen = new Set<string>();
+  const bookings = [];
+
+  for (const doc of [...exact.docs, ...keyed.docs]) {
+    if (seen.has(doc.id)) {
+      continue;
+    }
+    seen.add(doc.id);
+    const booking = bookingFromDoc(doc);
+    if (booking.status === "confirmed" && normalizePhone(booking.phone) === normalized) {
+      bookings.push(booking);
+    }
+  }
+
+  bookings.sort((left, right) => left.createdAt.localeCompare(right.createdAt));
+  return bookings;
+}
+
+async function syncClient(phone: string) {
+  const normalized = normalizePhone(phone);
+  if (!normalized) {
+    return;
+  }
+
+  const db = getAdminDb();
+  const confirmedBookings = await confirmedBookingsForPhone(phone);
+  const existing = await db.collection("clients").where("phone", "==", normalized).limit(1).get();
+
+  if (!confirmedBookings.length) {
+    const batch = db.batch();
+    existing.docs.forEach((doc) => batch.delete(doc.ref));
+    await batch.commit();
+    return;
+  }
+
+  const firstConfirmedAt = confirmedBookings[0].createdAt;
+  const lastConfirmedAt = confirmedBookings[confirmedBookings.length - 1].createdAt;
+  const newest = confirmedBookings[confirmedBookings.length - 1];
+  const updatedAt = new Date();
+
+  const data = {
+    name: newest.name,
+    phone: normalized,
+    bookingsCount: confirmedBookings.length,
+    firstConfirmedAt,
+    lastConfirmedAt,
+    updatedAt,
+  };
+
+  if (existing.docs[0]) {
+    await existing.docs[0].ref.set(data, { merge: true });
+  } else {
+    await db.collection("clients").add(data);
+  }
 }
 
 function buildAnalytics(bookings: ReturnType<typeof bookingFromDoc>[]) {
@@ -64,15 +146,18 @@ function buildAnalytics(bookings: ReturnType<typeof bookingFromDoc>[]) {
 }
 
 async function fetchAdminPayload() {
-  const snapshot = await getAdminDb()
-    .collection("bookings")
-    .orderBy("createdAt", "desc")
-    .get();
+  const db = getAdminDb();
+  const [bookingsSnapshot, clientsSnapshot] = await Promise.all([
+    db.collection("bookings").orderBy("createdAt", "desc").get(),
+    db.collection("clients").orderBy("lastConfirmedAt", "desc").get(),
+  ]);
 
-  const bookings = snapshot.docs.map(bookingFromDoc);
+  const bookings = bookingsSnapshot.docs.map(bookingFromDoc);
+  const clients = clientsSnapshot.docs.map(clientFromDoc);
 
   return {
     bookings,
+    clients,
     analytics: buildAnalytics(bookings),
   };
 }
@@ -111,8 +196,16 @@ export async function PATCH(request: Request) {
     }
 
     const { id, ...booking } = parsed.data;
+    const ref = getAdminDb().collection("bookings").doc(id);
+    const beforeDoc = await ref.get();
+    const oldPhone = beforeDoc.data()?.phone as string | undefined;
 
-    await getAdminDb().collection("bookings").doc(id).set(booking, { merge: true });
+    await ref.set(booking, { merge: true });
+
+    await syncClient(booking.phone);
+    if (oldPhone && normalizePhone(oldPhone) !== normalizePhone(booking.phone)) {
+      await syncClient(oldPhone);
+    }
 
     return NextResponse.json(await fetchAdminPayload());
   } catch (error) {
@@ -138,7 +231,14 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ message: "Réservation introuvable." }, { status: 400 });
     }
 
-    await getAdminDb().collection("bookings").doc(id).delete();
+    const ref = getAdminDb().collection("bookings").doc(id);
+    const beforeDoc = await ref.get();
+
+    await ref.delete();
+
+    if (beforeDoc.data()?.phone) {
+      await syncClient(beforeDoc.data()?.phone as string);
+    }
 
     return NextResponse.json(await fetchAdminPayload());
   } catch (error) {

@@ -18,7 +18,7 @@ const config: Config = {
         border: "#CBD5E1",
       },
       fontFamily: {
-        sans: ["Inter", "sans-serif"],
+        sans: ["var(--font-inter)", "Inter", "sans-serif"],
       },
       boxShadow: {
         soft: "0 20px 40px rgba(15, 23, 42, 0.08)",

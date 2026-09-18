@@ -1,3 +1,16 @@
+export const siteUrl = "https://lavagini.vercel.app";
+
+export const seoKeywords = [
+  "lavage de voiture à domicile en Tunisie",
+  "lavage auto à domicile",
+  "lavage de voiture à domicile Sousse",
+  "lavage voiture mobile Tunisie",
+  "nettoyage de voiture à domicile",
+  "lavage à domicile Tunisie",
+  "service de lavage voiture à domicile",
+  "lavage extérieur intérieur Tunisie",
+];
+
 export const navigation = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Services" },
@@ -74,14 +87,14 @@ export const packages = [
   {
     id: "basique",
     name: "Basique",
-    price: "15–20 TND",
+    price: "20 TND",
     description: "La formule simple pour un extérieur propre et net.",
     features: ["Lavage extérieur", "Nettoyage jantes", "Nettoyage vitres"],
   },
   {
     id: "standard",
     name: "Standard",
-    price: "30–35 TND",
+    price: "30 TND",
     description: "Le meilleur équilibre entre rapidité, propreté et confort.",
     features: [
       "Lavage extérieur",
@@ -95,14 +108,16 @@ export const packages = [
   {
     id: "premium",
     name: "Premium",
-    price: "50–80 TND",
+    price: "40 TND",
     description: "Une remise à niveau complète pour un résultat plus profond.",
     features: [
-      "Nettoyage intérieur complet",
-      "Shampoing sièges",
-      "Lavage extérieur",
-      "Polish carrosserie",
-      "Brillance pneus",
+      "Nettoyage extérieur",
+      "Nettoyage ciblé",
+      "Cire brillante",
+      "Essuyage",
+      "Aspiration intégrale",
+      "Tapis — brossage à mousse",
+      "Nettoyage tableau de bord",
     ],
   },
 ];

@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { CalendarDays, Clock3, PhoneCall } from "lucide-react";
 
@@ -7,6 +8,15 @@ import { contactDetails } from "@/lib/site-content";
 import { BookingForm } from "@/components/booking-form";
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Réserver un lavage de voiture à domicile",
+  description:
+    "Réservez en ligne votre lavage de voiture à domicile à Sousse et ses alentours en Tunisie. Choisissez votre forfait, votre date et votre adresse, nous vous rappelons pour confirmer.",
+  alternates: {
+    canonical: "/reserver",
+  },
+};
 
 export default function BookingPage() {
   return (

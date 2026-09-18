@@ -11,14 +11,15 @@ export function HomeHero() {
     <section className="overflow-hidden">
       <div className="container-shell section-space grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
         <div className="space-y-8">
-          <Badge>Service mobile à Sousse</Badge>
+          <Badge>Lavage auto mobile en Tunisie · Sousse et alentours</Badge>
           <div className="space-y-5">
             <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-primary sm:text-5xl">
-              Lavage de voiture à domicile
+              Lavage de voiture à domicile en Tunisie
             </h1>
             <p className="max-w-2xl text-lg leading-8 text-slate-600">
-              Nous venons directement à votre maison ou votre bureau pour nettoyer
-              votre voiture avec un service professionnel.
+              Nous venons directement à votre maison, votre bureau ou votre parking pour
+              nettoyer votre voiture avec un service professionnel, à Sousse et ses
+              alentours.
             </p>
           </div>
 

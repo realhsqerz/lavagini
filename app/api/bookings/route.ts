@@ -2,6 +2,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import { NextResponse } from "next/server";
 
 import { getAdminDb } from "@/lib/firebase-admin";
+import { normalizePhone } from "@/lib/phone";
 import { packages } from "@/lib/site-content";
 import { bookingSchema } from "@/lib/validation";
 
@@ -25,6 +26,7 @@ export async function POST(request: Request) {
     await getAdminDb().collection("bookings").add({
       ...parsed.data,
       package: packageName,
+      phoneKey: normalizePhone(parsed.data.phone),
       status: "pending",
       createdAt: FieldValue.serverTimestamp(),
     });

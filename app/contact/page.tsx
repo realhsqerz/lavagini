@@ -1,10 +1,20 @@
 import type { ComponentType, ReactNode } from "react";
+import type { Metadata } from "next";
 import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 
 import { contactDetails } from "@/lib/site-content";
 
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Contact — tous vos lavages à domicile",
+  description:
+    "Contactez Lavagini pour un lavage de voiture à domicile à Sousse et ses alentours en Tunisie : appel, WhatsApp, email ou zone de service.",
+  alternates: {
+    canonical: "/contact",
+  },
+};
 
 export default function ContactPage() {
   return (

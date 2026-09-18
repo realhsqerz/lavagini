@@ -1,7 +1,18 @@
+import type { Metadata } from "next";
+
 import { services } from "@/lib/site-content";
 
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "Nos services de lavage de voiture à domicile",
+  description:
+    "Lavage extérieur, nettoyage intérieur et nettoyage complet de voiture à domicile, à Sousse et ses alentours en Tunisie. Découvrez nos prestations de lavage auto mobile.",
+  alternates: {
+    canonical: "/services",
+  },
+};
 
 export default function ServicesPage() {
   return (

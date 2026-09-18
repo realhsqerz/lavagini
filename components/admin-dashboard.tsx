@@ -1,10 +1,19 @@
 "use client";
 
 import type { ComponentType, Dispatch, ReactNode, SetStateAction } from "react";
-import { useEffect, useState } from "react";
-import { BarChart3, CalendarRange, CheckCircle2, ClipboardList, Trash2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  BarChart3,
+  CalendarRange,
+  CheckCircle2,
+  ClipboardList,
+  Search,
+  Trash2,
+  Users,
+} from "lucide-react";
 
-import { AdminBookingUpdateValues, BookingRecord } from "@/lib/validation";
+import { normalizePhone } from "@/lib/phone";
+import { AdminBookingUpdateValues, BookingRecord, ClientRecord } from "@/lib/validation";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +32,7 @@ type AdminAnalytics = {
 type AdminPayload = {
   message?: string;
   bookings?: BookingRecord[];
+  clients?: ClientRecord[];
   analytics?: AdminAnalytics;
 };
 
@@ -37,20 +47,36 @@ const emptyAnalytics: AdminAnalytics = {
 export function AdminDashboard({
   initialView = "dashboard",
 }: {
-  initialView?: "dashboard" | "analytics";
+  initialView?: "dashboard" | "clients" | "analytics";
 }) {
   const [token, setToken] = useState("");
   const [bookings, setBookings] = useState<BookingRecord[]>([]);
+  const [clients, setClients] = useState<ClientRecord[]>([]);
   const [analytics, setAnalytics] = useState<AdminAnalytics>(emptyAnalytics);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
-  const [activeView, setActiveView] = useState<"dashboard" | "analytics">(initialView);
+  const [activeView, setActiveView] = useState<"dashboard" | "clients" | "analytics">(
+    initialView,
+  );
   const [selectedId, setSelectedId] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [formValues, setFormValues] = useState<AdminBookingUpdateValues | null>(null);
+
+  const clientByPhone = useMemo(() => {
+    const map = new Map<string, ClientRecord>();
+    for (const client of clients) {
+      map.set(client.phone, client);
+    }
+    return map;
+  }, [clients]);
+
+  function clientForBooking(phone: string) {
+    return clientByPhone.get(normalizePhone(phone));
+  }
 
   useEffect(() => {
     const savedToken = window.localStorage.getItem("lavage-admin-token");
@@ -62,9 +88,11 @@ export function AdminDashboard({
 
   function applyPayload(payload: AdminPayload) {
     const nextBookings = payload.bookings ?? [];
+    const nextClients = payload.clients ?? [];
     const nextAnalytics = payload.analytics ?? emptyAnalytics;
 
     setBookings(nextBookings);
+    setClients(nextClients);
     setAnalytics(nextAnalytics);
 
     if (!nextBookings.length) {
@@ -99,6 +127,7 @@ export function AdminDashboard({
     if (!response.ok) {
       setAuthenticated(false);
       setBookings([]);
+      setClients([]);
       setAnalytics(emptyAnalytics);
       setSelectedId("");
       setFormValues(null);
@@ -185,14 +214,31 @@ export function AdminDashboard({
   function logout() {
     setAuthenticated(false);
     setBookings([]);
+    setClients([]);
     setAnalytics(emptyAnalytics);
     setSelectedId("");
+    setSearchQuery("");
     setFormValues(null);
     setNotice("");
     setError("");
     setToken("");
     window.localStorage.removeItem("lavage-admin-token");
   }
+
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const visibleBookings = normalizedQuery
+    ? bookings.filter((booking) =>
+        [booking.name, booking.phone, booking.location, booking.carType, booking.package]
+          .join(" ")
+          .toLowerCase()
+          .includes(normalizedQuery),
+      )
+    : bookings;
+  const visibleClients = normalizedQuery
+    ? clients.filter((client) =>
+        [client.name, client.phone].join(" ").toLowerCase().includes(normalizedQuery),
+      )
+    : clients;
 
   return (
     <div className="space-y-6">
@@ -216,7 +262,7 @@ export function AdminDashboard({
         </Card>
       ) : (
         <>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <StatCard
               icon={ClipboardList}
               label="Réservations"
@@ -232,6 +278,7 @@ export function AdminDashboard({
               label="Confirmées"
               value={String(analytics.confirmedBookings)}
             />
+            <StatCard icon={Users} label="Clients" value={String(clients.length)} />
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -241,6 +288,13 @@ export function AdminDashboard({
                 onClick={() => setActiveView("dashboard")}
               >
                 Gestion des réservations
+              </Button>
+              <Button
+                variant={activeView === "clients" ? "default" : "outline"}
+                onClick={() => setActiveView("clients")}
+              >
+                <Users className="mr-2 h-4 w-4" />
+                Clients
               </Button>
               <Button
                 variant={activeView === "analytics" ? "default" : "outline"}
@@ -271,6 +325,22 @@ export function AdminDashboard({
             </p>
           ) : null}
 
+          {activeView !== "analytics" ? (
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+              <Input
+                value={searchQuery}
+                onChange={(event) => setSearchQuery(event.target.value)}
+                placeholder={
+                  activeView === "clients"
+                    ? "Rechercher un client (nom, téléphone)..."
+                    : "Rechercher une réservation (nom, téléphone, adresse, forfait)..."
+                }
+                className="pl-11"
+              />
+            </div>
+          ) : null}
+
           {activeView === "dashboard" ? (
             <div className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
               <Card className="h-fit">
@@ -278,7 +348,7 @@ export function AdminDashboard({
                   <CardTitle>Réservations</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {bookings.map((booking) => (
+                  {visibleBookings.map((booking) => (
                     <button
                       key={booking.id}
                       type="button"
@@ -303,11 +373,32 @@ export function AdminDashboard({
                       <p className="mt-2 text-xs uppercase tracking-[0.16em] text-slate-500">
                         {booking.package} · {booking.preferredDate} · {booking.preferredTime}
                       </p>
+                      {(() => {
+                        const client = clientForBooking(booking.phone);
+                        if (!client) {
+                          return null;
+                        }
+                        return (
+                          <div className="mt-3 flex flex-wrap gap-2">
+                            <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 uppercase">
+                              Client
+                            </span>
+                            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                              {ordinalLabel(client.bookingsCount)} réservation
+                            </span>
+                            <span className="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">
+                              Client depuis {formatClientSince(client.firstConfirmedAt)}
+                            </span>
+                          </div>
+                        );
+                      })()}
                     </button>
                   ))}
-                  {!bookings.length ? (
+                  {!visibleBookings.length ? (
                     <p className="text-sm text-slate-500">
-                      Aucune réservation enregistrée pour le moment.
+                      {normalizedQuery
+                        ? "Aucune réservation ne correspond à votre recherche."
+                        : "Aucune réservation enregistrée pour le moment."}
                     </p>
                   ) : null}
                 </CardContent>
@@ -435,6 +526,25 @@ export function AdminDashboard({
                   )}
                 </CardContent>
               </Card>
+            </div>
+          ) : activeView === "clients" ? (
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {visibleClients.map((client) => (
+                <ClientCard key={client.id} client={client} />
+              ))}
+              {!visibleClients.length ? (
+                <div className="sm:col-span-2 xl:col-span-3">
+                  <Card>
+                    <CardContent className="p-6">
+                      <p className="text-sm text-slate-500">
+                        {normalizedQuery
+                          ? "Aucun client ne correspond à votre recherche."
+                          : "Aucun client enregistré pour le moment. Un client est créé automatiquement dès qu'une réservation est confirmée (repéré par son numéro de téléphone)."}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              ) : null}
             </div>
           ) : (
             <div className="grid gap-6 lg:grid-cols-2">
@@ -591,5 +701,82 @@ function Insight({ title, text }: { title: string; text: string }) {
       <p className="text-sm font-semibold text-primary">{title}</p>
       <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
     </div>
+  );
+}
+
+function ordinalLabel(count: number) {
+  if (count === 1) {
+    return "1ère";
+  }
+  return `${count}e`;
+}
+
+function formatClientSince(iso: string) {
+  const since = new Date(iso);
+  const now = new Date();
+  const days = Math.floor((now.getTime() - since.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (days <= 0) {
+    return "aujourd'hui";
+  }
+  if (days < 30) {
+    return days === 1 ? "1 jour" : `${days} jours`;
+  }
+
+  const months = Math.floor(days / 30.44);
+  if (months < 12) {
+    return months === 1 ? "1 mois" : `${months} mois`;
+  }
+
+  const years = Math.floor(months / 12);
+  const remainingMonths = months % 12;
+  const yearLabel = years === 1 ? "1 an" : `${years} ans`;
+  return remainingMonths ? `${yearLabel} ${remainingMonths} mois` : yearLabel;
+}
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function ClientCard({ client }: { client: ClientRecord }) {
+  return (
+    <Card className="h-fit">
+      <CardContent className="p-6">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="font-semibold text-primary">{client.name}</p>
+            <p className="mt-1 text-sm text-slate-600">{client.phone}</p>
+          </div>
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-accent">
+            <Users className="h-5 w-5" />
+          </div>
+        </div>
+
+        <div className="mt-4 grid gap-3">
+          <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+            <span className="text-sm text-slate-600">Réservations</span>
+            <span className="text-sm font-semibold text-primary">
+              {ordinalLabel(client.bookingsCount)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+            <span className="text-sm text-slate-600">Client depuis</span>
+            <span className="text-sm font-semibold text-primary">
+              {formatClientSince(client.firstConfirmedAt)}
+            </span>
+          </div>
+          <div className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3">
+            <span className="text-sm text-slate-600">Dernière réservation</span>
+            <span className="text-sm font-semibold text-primary">
+              {formatDate(client.lastConfirmedAt)}
+            </span>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

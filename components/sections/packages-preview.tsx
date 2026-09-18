@@ -10,7 +10,7 @@ export function PackagesPreviewSection() {
         <SectionHeading
           eyebrow="Forfaits"
           title="Trois formules claires pour réserver vite"
-          description="Les prix restent affichés en fourchette pour vous laisser de la souplesse selon le type de véhicule et l'état général."
+          description="Des tarifs fixes et simples : Basique à 20 TND, Standard à 30 TND et Premium à 40 TND."
         />
         <div className="grid gap-6 lg:grid-cols-3">
           {packages.map((pkg) => (

@@ -1,5 +1,16 @@
+import type { Metadata } from "next";
+
 import { SectionHeading } from "@/components/section-heading";
 import { Card, CardContent } from "@/components/ui/card";
+
+export const metadata: Metadata = {
+  title: "À propos de notre service de lavage mobile",
+  description:
+    "Le service mobile de lavage de voiture à domicile en Tunisie, à Sousse et ses alentours : nous nous déplaçons jusqu'à vous pour un lavage rapide et professionnel.",
+  alternates: {
+    canonical: "/a-propos",
+  },
+};
 
 export default function AboutPage() {
   return (
