@@ -87,9 +87,9 @@ export default function HomePage() {
       <JsonLd data={localBusinessSchema} />
       <JsonLd data={faqSchema} />
       <HomeHero />
+      <PackagesPreviewSection />
       <HowItWorksSection />
       <HighlightsSection />
-      <PackagesPreviewSection />
       <FaqSection />
       <ContactCtaSection />
     </>

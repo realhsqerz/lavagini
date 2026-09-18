@@ -23,11 +23,19 @@ export default function PackagesPage() {
           title="Des prix lisibles et des niveaux de service clairs"
           description="Trois formules à tarif fixe : Basique à 20 TND, Standard à 30 TND et Premium à 40 TND."
         />
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:p-0">
           {packages.map((pkg) => (
-            <PackageCard key={pkg.id} pkg={pkg} />
+            <div
+              key={pkg.id}
+              className="w-[82vw] shrink-0 snap-center sm:w-[400px] lg:w-auto lg:shrink"
+            >
+              <PackageCard pkg={pkg} />
+            </div>
           ))}
         </div>
+        <p className="text-center text-xs text-slate-500 lg:hidden">
+          Faites glisser pour découvrir les trois forfaits →
+        </p>
       </div>
     </section>
   );

@@ -26,7 +26,7 @@ body {
 }
 
 .section-space {
-  @apply py-16 sm:py-20;
+  @apply py-12 sm:py-16;
 }
 
 .surface {
