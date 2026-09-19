@@ -11,11 +11,11 @@ export function Navbar() {
       <div className="container-shell flex h-16 items-center justify-between gap-4">
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/logo-mark.svg"
+            src="/logo.jpg"
             alt="Lavagini"
-            width={40}
+            width={66}
             height={40}
-            className="h-10 w-10 rounded-2xl"
+            className="h-10 w-auto rounded-xl"
             priority
           />
           <div>

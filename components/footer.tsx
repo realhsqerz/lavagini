@@ -10,11 +10,11 @@ export function Footer() {
         <div className="space-y-3">
           <div className="flex items-center gap-3">
             <Image
-              src="/logo-mark.svg"
+              src="/logo.jpg"
               alt={contactDetails.brandName}
-              width={44}
+              width={66}
               height={44}
-              className="h-11 w-11 rounded-2xl"
+              className="h-11 w-auto rounded-2xl"
             />
             <p className="text-lg font-semibold text-primary">{contactDetails.brandName}</p>
           </div>
