@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,6 +100,7 @@ export function BookingForm() {
   const [timeSlotId, setTimeSlotId] = useState("");
   const [timeError, setTimeError] = useState("");
   const [mapPosition, setMapPosition] = useState<MapPosition | null>(null);
+  const navTimeRef = useRef(0);
 
   const defaultPackage = useMemo(() => {
     if (selectedPackage && packages.some((pkg) => pkg.id === selectedPackage)) {
@@ -132,6 +133,11 @@ export function BookingForm() {
   }
 
   async function goNext() {
+    const now = Date.now();
+    if (now - navTimeRef.current < 300) {
+      return;
+    }
+
     let valid = true;
 
     if (step === 0) {
@@ -165,16 +171,22 @@ export function BookingForm() {
       return;
     }
 
+    navTimeRef.current = Date.now();
     setStep((current) => current + 1);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function goBack() {
+    navTimeRef.current = Date.now();
     setStep((current) => Math.max(0, current - 1));
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   async function onSubmit(values: BookingFormValues) {
+    if (Date.now() - navTimeRef.current < 300) {
+      return;
+    }
+
     setSubmitError("");
     setSuccessMessage("");
 
@@ -220,7 +232,7 @@ export function BookingForm() {
       className="space-y-6"
       onSubmit={form.handleSubmit(onSubmit)}
       onKeyDown={(event) => {
-        if (event.key === "Enter" && step <= 4) {
+        if (event.key === "Enter") {
           event.preventDefault();
         }
       }}
