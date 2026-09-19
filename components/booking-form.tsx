@@ -147,7 +147,10 @@ export function BookingForm() {
         setCarError("Choisissez d'abord votre type de voiture.");
         valid = false;
       } else {
-        form.setValue("carType", formatCarType(carId), { shouldValidate: true });
+        const car = carModels.find((model) => model.id === carId);
+        form.setValue("carType", car ? car.label : formatCarType(carId), {
+          shouldValidate: true,
+        });
       }
     } else if (step === 2) {
       valid = form.getValues("package").length > 0;
