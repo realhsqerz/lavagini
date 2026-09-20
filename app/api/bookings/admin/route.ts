@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import { getAdminDb } from "@/lib/firebase-admin";
 import { normalizePhone } from "@/lib/phone";
-import { adminBookingUpdateSchema } from "@/lib/validation";
+import { adminBookingUpdateSchema, adminClientUpdateSchema } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
@@ -46,6 +46,7 @@ function clientFromDoc(doc: FirebaseFirestore.QueryDocumentSnapshot) {
     id: doc.id,
     name: data.name ?? "",
     phone: data.phone ?? "",
+    secondaryPhone: typeof data.secondaryPhone === "string" ? data.secondaryPhone : "",
     bookingsCount: typeof data.bookingsCount === "number" ? data.bookingsCount : 0,
     firstConfirmedAt: toIso(data.firstConfirmedAt ?? new Date()),
     lastConfirmedAt: toIso(data.lastConfirmedAt ?? new Date()),
@@ -98,11 +99,22 @@ async function syncClient(phone: string) {
   const newest = confirmedBookings[confirmedBookings.length - 1];
   const updatedAt = new Date();
 
+  const existingFirst =
+    existing.docs[0]?.data()?.firstConfirmedAt;
+  const existingFirstIso =
+    typeof existingFirst?.toDate === "function"
+      ? existingFirst.toDate().toISOString()
+      : typeof existingFirst === "string"
+        ? existingFirst
+        : null;
+
   const data = {
     name: newest.name,
     phone: normalized,
     bookingsCount: confirmedBookings.length,
-    firstConfirmedAt,
+    firstConfirmedAt: existingFirstIso && existingFirstIso < firstConfirmedAt
+      ? existingFirstIso
+      : firstConfirmedAt,
     lastConfirmedAt,
     updatedAt,
   };
@@ -186,6 +198,26 @@ export async function PATCH(request: Request) {
     }
 
     const payload = await request.json();
+
+    if (typeof payload?.clientId === "string") {
+      const clientParsed = adminClientUpdateSchema.safeParse(payload);
+      if (!clientParsed.success) {
+        return NextResponse.json(
+          { message: clientParsed.error.issues[0]?.message ?? "Données client invalides." },
+          { status: 400 },
+        );
+      }
+
+      const { clientId, ...clientUpdate } = clientParsed.data;
+      const data = {
+        ...clientUpdate,
+        updatedAt: new Date(),
+      };
+      await getAdminDb().collection("clients").doc(clientId).set(data, { merge: true });
+
+      return NextResponse.json(await fetchAdminPayload());
+    }
+
     const parsed = adminBookingUpdateSchema.safeParse(payload);
 
     if (!parsed.success) {

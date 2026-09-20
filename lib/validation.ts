@@ -30,7 +30,26 @@ export type ClientRecord = {
   id: string;
   name: string;
   phone: string;
+  secondaryPhone: string;
   bookingsCount: number;
   firstConfirmedAt: string;
   lastConfirmedAt: string;
 };
+
+export const adminClientUpdateSchema = z.object({
+  clientId: z.string().min(1, "Client introuvable."),
+  name: z
+    .string()
+    .trim()
+    .min(2, "Entrez un nom d'au moins 2 caractères.")
+    .optional(),
+  secondaryPhone: z
+    .string()
+    .trim()
+    .max(15, "2e numéro trop long (15 caractères max).")
+    .refine((value) => value === "" || /^[0-9+ ]{8,15}$/.test(value), {
+      message: "Entrez un numéro valide (8 à 15 chiffres) ou laissez vide.",
+    }),
+});
+
+export type AdminClientUpdateValues = z.infer<typeof adminClientUpdateSchema>;
