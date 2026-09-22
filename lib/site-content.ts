@@ -1,4 +1,4 @@
-export const siteUrl = "https://lavagini.vercel.app";
+export const siteUrl = "https://lavagini.tn";
 
 export const seoKeywords = [
   "lavage de voiture à domicile en Tunisie",
