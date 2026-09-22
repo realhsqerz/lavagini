@@ -18,7 +18,10 @@ const pinIcon = L.divIcon({
   popupAnchor: [0, -34],
 });
 
-const DEFAULT_CENTER: LatLngTuple = [35.8256, 10.6089];
+const DEFAULT_CENTER: LatLngTuple = [35.747, 10.77];
+const DEFAULT_ZOOM = 12;
+const MIN_ZOOM = 11;
+
 
 export function MapPicker({
   position,
@@ -73,9 +76,12 @@ export function MapPicker({
       <div className="overflow-hidden rounded-2xl border border-slate-200">
         <MapContainer
           center={DEFAULT_CENTER}
-          zoom={13}
-          zoomControl
+          zoom={DEFAULT_ZOOM}
+          minZoom={MIN_ZOOM}
+          maxBounds={[[35.55, 10.4], [36.05, 10.95]]}
+          maxBoundsViscosity={0.85}
           scrollWheelZoom={false}
+          zoomControl
           className="map-picker h-72 w-full"
         >
           <TileLayer
