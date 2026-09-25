@@ -6,7 +6,7 @@ import { Footer } from "@/components/footer";
 import { MobileActionBar } from "@/components/mobile-action-bar";
 import { Navbar } from "@/components/navbar";
 import { JsonLd } from "@/components/seo/json-ld";
-import { seoKeywords, siteUrl } from "@/lib/site-content";
+import { contactDetails, seoKeywords, siteUrl } from "@/lib/site-content";
 
 import "./globals.css";
 
@@ -58,7 +58,11 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
   },
   icons: {
-    icon: "/apple-touch-icon.png",
+    icon: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
     shortcut: "/apple-touch-icon.png",
     apple: "/apple-touch-icon.png",
   },
@@ -83,8 +87,48 @@ export default function RootLayout({
             name: "Lavagini",
             url: siteUrl,
             inLanguage: "fr-FR",
+            publisher: { "@id": `${siteUrl}/#organization` },
             description:
               "Service de lavage de voiture à domicile à Sousse et ses alentours, en Tunisie.",
+          }}
+        />
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": ["Organization", "LocalBusiness"],
+            "@id": `${siteUrl}/#organization`,
+            name: contactDetails.brandName,
+            url: siteUrl,
+            logo: {
+              "@type": "ImageObject",
+              url: `${siteUrl}/android-chrome-512x512.png`,
+              width: 512,
+              height: 512,
+            },
+            image: `${siteUrl}/android-chrome-512x512.png`,
+            description:
+              "Service de lavage de voiture mobile à Sousse, Sahline et Monastir, en Tunisie.",
+            areaServed: [
+              { "@type": "City", name: "Sousse" },
+              { "@type": "City", name: "Sahline" },
+              { "@type": "City", name: "Monastir" },
+              { "@type": "Country", name: "Tunisie" },
+            ],
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: "Sousse",
+              addressRegion: "Sousse",
+              addressCountry: "TN",
+            },
+            contactPoint: [
+              {
+                "@type": "ContactPoint",
+                telephone: contactDetails.phoneHref,
+                contactType: "customer service",
+                areaServed: "TN",
+                availableLanguage: ["fr", "ar"],
+              },
+            ],
           }}
         />
         <Navbar />
