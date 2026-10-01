@@ -22,6 +22,30 @@ const DEFAULT_CENTER: LatLngTuple = [35.747, 10.77];
 const DEFAULT_ZOOM = 12;
 const MIN_ZOOM = 11;
 
+// Zones reellement desservies : Sousse, Sahline et Monastir centre-ville.
+// Les autres localites de Monastir (sud) et l'interieur des terres sont exclus.
+const SERVICE_ZONES = [
+  { name: "Sousse", lat: 35.8256, lng: 10.6089, radiusKm: 8 },
+  { name: "Sahline", lat: 35.7256, lng: 10.7022, radiusKm: 5 },
+  { name: "Monastir centre", lat: 35.777, lng: 10.8259, radiusKm: 5 },
+] as const;
+
+function distanceKm(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * 6371 * Math.asin(Math.sqrt(a));
+}
+
+export function findServiceZone(lat: number, lng: number) {
+  return SERVICE_ZONES.find(
+    (zone) => distanceKm(lat, lng, zone.lat, zone.lng) <= zone.radiusKm,
+  );
+}
+
 
 export function MapPicker({
   position,
@@ -34,6 +58,13 @@ export function MapPicker({
   const [geoError, setGeoError] = useState("");
 
   async function handlePick(lat: number, lng: number) {
+    const zone = findServiceZone(lat, lng);
+    if (!zone) {
+      setGeoError(
+        "Cette zone n'est pas encore desservie. Réservations à Sousse, Sahline et Monastir centre-ville uniquement.",
+      );
+      return;
+    }
     setGeoError("");
     setLoading(true);
     onPositionChange({ lat, lng }, "");
@@ -54,6 +85,13 @@ export function MapPicker({
     navigator.geolocation.getCurrentPosition(
       async (positionResult) => {
         const { latitude, longitude } = positionResult.coords;
+        if (!findServiceZone(latitude, longitude)) {
+          setLoading(false);
+          setGeoError(
+            "Votre position est hors de notre zone. Réservations à Sousse, Sahline et Monastir centre-ville uniquement.",
+          );
+          return;
+        }
         onPositionChange({ lat: latitude, lng: longitude }, "");
         const address = await reverseGeocode(latitude, longitude);
         setLoading(false);
@@ -78,7 +116,7 @@ export function MapPicker({
           center={DEFAULT_CENTER}
           zoom={DEFAULT_ZOOM}
           minZoom={MIN_ZOOM}
-          maxBounds={[[35.55, 10.4], [36.05, 10.95]]}
+          maxBounds={[[35.67, 10.53], [35.9, 10.89]]}
           maxBoundsViscosity={0.85}
           scrollWheelZoom={false}
           zoomControl

@@ -128,8 +128,7 @@ export const serviceZones = [
   { id: "sousse-bouhsina", label: "Sousse - Bouhsina" },
   { id: "sousse-sakiet-ezzit", label: "Sousse - Sakiet Ezzit" },
   { id: "sahline", label: "Sahline" },
-  { id: "monastir-centre", label: "Monastir - Centre" },
-  { id: "monastir-khniss", label: "Monastir - Khniss" },
+  { id: "monastir-centre", label: "Monastir - Centre-ville" },
 ];
 
 export const carModels = [
