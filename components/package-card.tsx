@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Check } from "lucide-react";
 
+import { whatsappReservationLink } from "@/lib/site-content";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -54,9 +56,9 @@ export function PackageCard({ pkg }: PackageCardProps) {
             </li>
           ))}
         </ul>
-        <Link href={`/reserver?forfait=${pkg.id}`} className="block">
+        <Link href={whatsappReservationLink(pkg.id)} className="block">
           <Button
-            variant={pkg.featured ? "default" : "default"}
+            variant="default"
             className={
               pkg.featured
                 ? "w-full !bg-white !text-[#0F172A] hover:!bg-slate-100"

@@ -15,7 +15,6 @@ export const navigation = [
   { href: "/", label: "Accueil" },
   { href: "/services", label: "Services" },
   { href: "/forfaits", label: "Forfaits" },
-  { href: "/reserver", label: "Réserver" },
   { href: "/a-propos", label: "À propos" },
   { href: "/contact", label: "Contact" },
 ];
@@ -33,9 +32,9 @@ export const contactDetails = {
 
 export const steps = [
   {
-    title: "Réservez en ligne",
+    title: "Contactez-nous",
     description:
-      "Choisissez votre forfait, indiquez votre adresse et proposez le créneau qui vous convient.",
+      "Écrivez-nous sur WhatsApp ou appelez-nous : indiquez votre forfait, votre adresse et le créneau qui vous convient.",
   },
   {
     title: "Confirmation par téléphone",
@@ -168,6 +167,15 @@ export const timeSlots = [
     description: "Réservation à 14h00",
   },
 ];
+
+export function whatsappReservationLink(packageId?: string | null) {
+  const selectedPackage = packages.find((item) => item.id === packageId);
+  const message = selectedPackage
+    ? `Bonjour Lavagini, je souhaite réserver un lavage de voiture à domicile avec le forfait ${selectedPackage.name} (${selectedPackage.price}).`
+    : "Bonjour Lavagini, je souhaite réserver un lavage de voiture à domicile.";
+
+  return `${contactDetails.whatsappHref}?text=${encodeURIComponent(message)}`;
+}
 
 export function formatCarType(carModelId: string) {
   const model = carModels.find((item) => item.id === carModelId);

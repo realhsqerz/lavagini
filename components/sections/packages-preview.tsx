@@ -13,7 +13,7 @@ export function PackagesPreviewSection() {
         <SectionHeading
           eyebrow="Nos forfaits"
           title="Les offres de lavage à domicile"
-          description="Des tarifs fixes et simples : Basique à 20 TND, Standard à 30 TND et Premium à 40 TND. Choisissez votre formule et réservez en ligne."
+          description="Des tarifs fixes et simples : Basique à 20 TND, Standard à 30 TND et Premium à 40 TND. Choisissez votre formule et réservez par WhatsApp ou par téléphone."
         />
         <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0 lg:grid lg:grid-cols-3 lg:gap-6 lg:overflow-visible lg:p-0">
           {packages.map((pkg) => (

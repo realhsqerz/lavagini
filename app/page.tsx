@@ -12,7 +12,7 @@ import { contactDetails, packages, siteUrl } from "@/lib/site-content";
 export const metadata: Metadata = {
   title: "Lavage de voiture à domicile en Tunisie",
   description:
-    "Lavage et nettoyage de voiture à domicile à Sousse et ses alentours, en Tunisie. Réservez en ligne : lavage extérieur, intérieur, cire brillante et nettoyage complet dès 20 TND.",
+    "Lavage et nettoyage de voiture à domicile à Sousse et ses alentours, en Tunisie. Réservez par WhatsApp : lavage extérieur, intérieur, cire brillante et nettoyage complet dès 20 TND.",
   alternates: {
     canonical: "/",
   },
@@ -31,7 +31,7 @@ export default function HomePage() {
     "@type": ["AutoWash", "LocalBusiness"],
     name: "Lavagini",
     description:
-      "Service de lavage de voiture à domicile à Sousse et ses alentours, en Tunisie. Réservation en ligne, confirmation par téléphone.",
+      "Service de lavage de voiture à domicile à Sousse et ses alentours, en Tunisie. Réservation par WhatsApp ou téléphone, confirmation rapide.",
     url: siteUrl,
     image: `${siteUrl}/og-image.png`,
     telephone: contactDetails.phoneHref.replace("tel:", "+"),

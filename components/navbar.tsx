@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { navigation } from "@/lib/site-content";
+import { navigation, whatsappReservationLink } from "@/lib/site-content";
 
 import { Button } from "@/components/ui/button";
 
@@ -36,11 +36,16 @@ export function Navbar() {
           ))}
         </nav>
 
-        <Link href="/reserver" className="hidden sm:block">
+        <a
+          href={whatsappReservationLink()}
+          target="_blank"
+          rel="noreferrer"
+          className="hidden sm:block"
+        >
           <Button variant="secondary" size="sm">
             Réserver maintenant
           </Button>
-        </Link>
+        </a>
       </div>
     </header>
   );

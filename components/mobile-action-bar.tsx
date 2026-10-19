@@ -1,7 +1,6 @@
 import { Phone, CalendarDays, MessageCircle } from "lucide-react";
-import Link from "next/link";
 
-import { contactDetails } from "@/lib/site-content";
+import { contactDetails, whatsappReservationLink } from "@/lib/site-content";
 
 export function MobileActionBar() {
   return (
@@ -23,13 +22,15 @@ export function MobileActionBar() {
           <MessageCircle className="h-4 w-4" />
           WhatsApp
         </a>
-        <Link
-          href="/reserver"
+        <a
+          href={whatsappReservationLink()}
+          target="_blank"
+          rel="noreferrer"
           className="flex flex-col items-center gap-1 bg-accent px-3 py-3 text-xs font-semibold text-white"
         >
           <CalendarDays className="h-4 w-4" />
           Réserver
-        </Link>
+        </a>
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import { MessageCircle, Phone } from "lucide-react";
-import Link from "next/link";
 
 import { contactDetails } from "@/lib/site-content";
 
@@ -16,7 +15,7 @@ export function ContactCtaSection() {
                 Besoin d'un rendez-vous rapide
               </p>
               <h2 className="text-3xl font-semibold tracking-tight">
-                Réservez en ligne ou contactez-nous directement
+                Réservez par WhatsApp ou appelez-nous directement
               </h2>
               <p className="max-w-2xl text-sm leading-7 !text-slate-100">
                 Pour un besoin urgent, un accès parking particulier ou une demande
@@ -36,11 +35,6 @@ export function ContactCtaSection() {
                   WhatsApp
                 </Button>
               </a>
-              <Link href="/reserver">
-                <Button className="w-full bg-white text-primary hover:bg-slate-100">
-                  Réserver
-                </Button>
-              </Link>
             </div>
           </div>
         </div>

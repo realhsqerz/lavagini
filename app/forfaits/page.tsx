@@ -8,7 +8,7 @@ import { SectionHeading } from "@/components/section-heading";
 export const metadata: Metadata = {
   title: "Forfaits lavage de voiture à domicile : 20, 30 et 40 TND",
   description:
-    "Forfaits de lavage de voiture à domicile en Tunisie : Basique 20 TND, Standard 30 TND, Premium 40 TND. Réservation en ligne à Sousse et ses alentours.",
+    "Forfaits de lavage de voiture à domicile en Tunisie : Basique 20 TND, Standard 30 TND, Premium 40 TND. Réservation par WhatsApp ou téléphone à Sousse et ses alentours.",
   alternates: {
     canonical: "/forfaits",
   },

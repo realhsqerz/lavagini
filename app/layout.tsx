@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Lavagini",
   },
   description:
-    "Lavage de voiture à domicile à Sousse et ses alentours, en Tunisie. Réservez en ligne un lavage auto mobile : extérieur, intérieur et complet, à partir de 20 TND.",
+    "Lavage de voiture à domicile à Sousse et ses alentours, en Tunisie. Réservez par WhatsApp ou par téléphone un lavage auto mobile : extérieur, intérieur et complet, à partir de 20 TND.",
   keywords: seoKeywords,
   applicationName: "Lavagini",
   alternates: {

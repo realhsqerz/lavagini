@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Phone } from "lucide-react";
 
-import { contactDetails, packages } from "@/lib/site-content";
+import { contactDetails, packages, whatsappReservationLink } from "@/lib/site-content";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,7 @@ export function HomeHero() {
           </div>
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Link href="/reserver">
+            <Link href={whatsappReservationLink()}>
               <Button variant="secondary" size="lg" className="w-full sm:w-auto">
                 Réserver maintenant
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -48,7 +48,7 @@ export function HomeHero() {
             {packages.map((pkg) => (
               <Link
                 key={pkg.id}
-                href={`/reserver?forfait=${pkg.id}`}
+                href={whatsappReservationLink(pkg.id)}
                 className="rounded-2xl border border-slate-200 bg-white px-2 py-3 text-center transition hover:border-accent hover:bg-blue-50"
               >
                 <p className="text-xs text-slate-500">{pkg.name}</p>
@@ -63,7 +63,7 @@ export function HomeHero() {
             {[
               "Déplacement à domicile",
               "Confirmation par téléphone",
-              "Réservation en moins de 2 minutes",
+              "Réponse rapide sur WhatsApp",
             ].map((item) => (
               <div
                 key={item}
@@ -93,7 +93,7 @@ export function HomeHero() {
               <p className="mt-3 text-sm leading-6 text-slate-200">
                 {featured.features.slice(0, 3).join(", ")} et plus encore.
               </p>
-              <Link href={`/reserver?forfait=${featured.id}`} className="mt-5 block">
+              <Link href={whatsappReservationLink(featured.id)} className="mt-5 block">
                 <Button
                   variant="secondary"
                   className="w-full bg-white text-primary hover:bg-slate-100"

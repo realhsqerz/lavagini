@@ -4,7 +4,7 @@ export const faqItems = [
   {
     question: "Comment réserver un lavage de voiture à domicile en Tunisie ?",
     answer:
-      "Remplissez le formulaire de réservation en ligne avec votre nom, votre téléphone, votre adresse et le créneau souhaité. Notre équipe vous rappelle ensuite pour confirmer le rendez-vous.",
+      "Écrivez-nous sur WhatsApp ou appelez-nous en indiquant votre forfait, votre adresse et le créneau souhaité. Notre équipe vous rappelle ensuite pour confirmer le rendez-vous.",
   },
   {
     question: "Quels sont les prix d'un lavage de voiture à domicile ?",
